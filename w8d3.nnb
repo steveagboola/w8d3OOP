@@ -1,0 +1,68 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "<a id=\"hw\"></a>\n\n## Homework"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "Design a flexible OOP system to describe characters in a RPG game\n\nThere are 4 Unique Characters which use Different Types of Attacking mechanisms and Defending mechanisms.\n\n- Orges - fights with club and defends with shield\n- Peons - fights with club and defends with shield\n- Knights - fights with a Sword and defends with Armor\n- Archer - fights with Bow and Arrow and has only is tunic to protect them\n\n- All Characters can collect gold and this will always be the same for every new type of character\n\nAt the end of this each character should be able to attack and defend and collect gold. If needed any character should be able to change his fighting style, say if a knight losing his sword, but finds a club he should be able to change his fighting mechanism to use the club\n\n<b>Hint: </b> To complete this assignment you will need multiple classes and interfaces and an Abstract class\n\nYou can use our [Final Rubber Ducky Walkthrough](#rubber) example as a guide "
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "//Solution\ninterface AttackStrategy {\n    attack(): void;\n}\n\ninterface DefenseStrategy {\n    defend(): void;\n}\n\ninterface GoldCollector {\n    collectGold(amount: number): void;\n}\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "// Attack Strategies\nclass ClubAttack implements AttackStrategy {\n    attack(): void {\n        console.log(\"Attacking with a club!\");\n    }\n}\n\nclass SwordAttack implements AttackStrategy {\n    attack(): void {\n        console.log(\"Swinging a sword!\");\n    }\n}\n\nclass BowAndArrowAttack implements AttackStrategy {\n    attack(): void {\n        console.log(\"Shooting an arrow!\");\n    }\n}\n\n// Defense Strategies\nclass ShieldDefense implements DefenseStrategy {\n    defend(): void {\n        console.log(\"Defending with a shield!\");\n    }\n}\n\nclass ArmorDefense implements DefenseStrategy {\n    defend(): void {\n        console.log(\"Protected by armor!\");\n    }\n}\n\nclass TunicDefense implements DefenseStrategy {\n    defend(): void {\n        console.log(\"Defending with just a tunic!\");\n    }\n}\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "abstract class Character implements GoldCollector {\n    protected attackStrategy$: AttackStrategy;\n    protected defenseStrategy$: DefenseStrategy;\n    private gold: number = 0;\n\n    constructor(attackStrategy: AttackStrategy, defenseStrategy: DefenseStrategy) {\n        this.attackStrategy$ = attackStrategy;\n        this.defenseStrategy$ = defenseStrategy;\n    }\n\n    public attack(): void {\n        this.attackStrategy$.attack();\n    }\n\n    public defend(): void {\n        this.defenseStrategy$.defend();\n    }\n\n    public collectGold(amount: number): void {\n        this.gold += amount;\n        console.log(`Collected gold. Total: ${this.gold}`);\n    }\n\n    public setAttackStrategy(newStrategy: AttackStrategy): void {\n        this.attackStrategy$ = newStrategy;\n    }\n\n    public setDefenseStrategy(newStrategy: DefenseStrategy): void {\n        this.defenseStrategy$ = newStrategy;\n    }\n}"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "class Ogre extends Character {\n    constructor() {\n        super(new ClubAttack(), new ShieldDefense());\n    }\n}\n\nclass Peon extends Character {\n    constructor() {\n        super(new ClubAttack(), new ShieldDefense());\n    }\n}\n\nclass Knight extends Character {\n    constructor() {\n        super(new SwordAttack(), new ArmorDefense());\n    }\n}\n\nclass Archer extends Character {\n    constructor() {\n        super(new BowAndArrowAttack(), new TunicDefense());\n    }\n}\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "let knight = new Knight();\nknight.attack(); // Swinging a sword!\nknight.defend(); // Protected by armor!\nknight.collectGold(100); // Collected gold. Total: 100\n\n// Knight finds a club and changes attack strategy\nknight.setAttackStrategy(new ClubAttack());\nknight.attack(); // Attacking with a club!\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "Swinging a sword!",
+                                "Protected by armor!",
+                                "Collected gold. Total: 100",
+                                "Attacking with a club!",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
